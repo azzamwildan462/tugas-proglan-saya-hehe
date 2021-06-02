@@ -1,0 +1,5 @@
+compile & run with: 
+./run 
+
+run with:
+./play
