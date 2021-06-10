@@ -421,6 +421,20 @@ bool main_menu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1
 }
 bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
 {
+    int r = 170, g = 30, b = 199;
+    int counter = 1;
+    bool up = 1;
+    sf::Text victoryText;
+    sf::Font font1;
+
+    font1.loadFromFile("../asset/fonts/arial.ttf");
+
+    victoryText.setFont(font1);
+    victoryText.setString("Victory");
+    victoryText.setPosition(sf::Vector2f(255, 70));
+    victoryText.setCharacterSize(90);
+    victoryText.setFillColor(sf::Color(r, g, b, 255));
+
     while (1)
     {
         while (window->pollEvent(*event))
@@ -433,7 +447,40 @@ bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
         }
         window->clear(sf::Color(0, 0, 0, 255));
 
+        victoryText.setFillColor(sf::Color(r, g, b, 255));
+        window->draw(victoryText);
+
         window->display();
+
+        //kelap kelip
+        if (counter % 20 == 0)
+        {
+            if (r >= 211 && g <= 0 && b >= 255 || g == 0)
+            {
+                up = 0;
+            }
+            else if (r <= 180 && g >= 45 && r <= 189)
+            {
+                up = 1;
+            }
+            if (up)
+            {
+                r++;
+                g--;
+                b++;
+            }
+            else
+            {
+                r--;
+                g++;
+                b--;
+            }
+        }
+        counter++;
+        if (counter >= 10000)
+        {
+            counter = 1;
+        }
     }
 }
 int game_over(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
