@@ -5,28 +5,30 @@
 #include "../include/others.h"
 #include <cstdio>
 
-class main_char
+class MainChar
 {
 private:
-    //tank
+    //==== variabel ====
     int xtar = 400, ytar = 500;
     float dx = 0, dy = -0.5, r = 0;
     float angle = 0;
-    float playerColor[4] = {150, 0, 176, 200};
+    float player_color[4] = {150, 0, 176, 200};
     float scale = 0.7;
     float xpos = 400, ypos = 500;
     float speed = 0.4;
     bool fire_ing = 0;
-    bool setFirst = 0;
-    bool bulletHitted = 0;
+    bool set_first = 0;
+    bool bullet_hitted = 0;
     float HP = 100;
-    float hitAreaX = 70, hitAreaY = 105; //kali 0.7
+    float hit_area_x = 70, hit_area_y = 105; //kali 0.7
+
+    //==== instance ====
     sf::RectangleShape body, head, gun, color, Hitpoints;
     sf::RenderWindow *window;
     Bullet bullet;
 
 public:
-    //tank
+    //==== method ====
     void init();
     void setPosition(float xpos, float ypos, float angle);
     void draw();
@@ -34,7 +36,7 @@ public:
     float getXpos();
     float getypos();
     void setRotation(float angle);
-    void setPlayerColor(float r, float g, float b, float a);
+    void setplayer_color(float r, float g, float b, float a);
     void setAngle(float angle);
     void move(sf::Vector2i cursor);
     bool isMove();
@@ -47,7 +49,7 @@ public:
     float getXbullet();
     float getYbullet();
     float getHitBullet();
-    void setHitBullet(bool isBullethitted);
+    void setHitBullet(bool isbullet_hitted);
     void setTarPos(float x, float y);
     void teleport(float xpos, float ypos);
     void setHP(float hp);

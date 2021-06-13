@@ -6,37 +6,26 @@
 using namespace sf;
 int main()
 {
-    bool wPressed = 0;
-    bool f10Pressed = 0;
-    uint64_t timer = 1;
-    bool isGameplayed = 1;
-
     RenderWindow window(VideoMode(800, 600), "Destroyer");
     Event event_handler;
     Vector2i cursor, cursor2;
-    Cursor moveCursor, teleCursor;
-    moveCursor.loadFromSystem(Cursor::Arrow);
-    teleCursor.loadFromSystem(Cursor::Cross);
-    window.setMouseCursor(moveCursor);
+    Cursor move_cursor, tele_cursor;
+    move_cursor.loadFromSystem(Cursor::Arrow);
+    tele_cursor.loadFromSystem(Cursor::Cross);
+    window.setMouseCursor(move_cursor);
 
-    if (!opening_game(&window, &event_handler, &cursor, &moveCursor))
+    if (!openingGame(&window, &event_handler, &cursor, &move_cursor))
         return 0;
 
     while (1)
     {
-        if (!main_menu(&window, &event_handler, &cursor, &moveCursor)) //play = retuern 1
+        if (!mainMenu(&window, &event_handler, &cursor, &move_cursor)) //play = retuern 1
             return 0;
 
-        if (!game1(&window, &event_handler, &cursor, &moveCursor, &teleCursor, &cursor2))
+        if (!game1(&window, &event_handler, &cursor, &move_cursor, &tele_cursor, &cursor2))
         {
             return 0;
         }
-        // else
-        // {
-        //     // printf("go TO MAIN menu");
-        //     if (!main_menu(&window, &event_handler, &cursor, &moveCursor))
-        //         return 0;
-        // }
     }
 
     return 0;

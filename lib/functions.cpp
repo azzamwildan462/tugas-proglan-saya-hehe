@@ -3,7 +3,7 @@
 #include "../include/others.h"
 #include "math.h"
 
-float find_direction(float xpos, float ypos, float xtarget, float ytarget)
+float findDirection(float xpos, float ypos, float xtarget, float ytarget)
 {
     float result, temp;
     xtarget -= xpos;
@@ -28,7 +28,7 @@ float find_direction(float xpos, float ypos, float xtarget, float ytarget)
     result *= 180 / 3.141592653589793238;
     return result + 90;
 }
-void heavy_rotation(float xpos, float ypos, float x0, float y0, float *xrot, float *yrot, float angle)
+void heavyRotation(float xpos, float ypos, float x0, float y0, float *xrot, float *yrot, float angle)
 {
     angle *= 3.141592653589793238 / 180;
     x0 -= xpos;
@@ -36,11 +36,11 @@ void heavy_rotation(float xpos, float ypos, float x0, float y0, float *xrot, flo
     *xrot = (cos(angle) * x0) + (-1 * sin(angle) * y0) + xpos;
     *yrot = (sin(angle) * x0) + (cos(angle) * y0) + ypos;
 }
-void linear_line(float x, float *y, float x0, float y0, float x1, float y1)
+void linearLine(float x, float *y, float x0, float y0, float x1, float y1)
 {
     *y = ((y1 - y0) * (x - x0) / (x1 - x0)) + y0;
 }
-void linear_line_invers(float *x, float y, float x0, float y0, float x1, float y1)
+void linearLineInvers(float *x, float y, float x0, float y0, float x1, float y1)
 {
     *x = ((x1 - x0) * (y - y0) / (y1 - y0)) + x0;
 }
@@ -49,45 +49,56 @@ float find_r(float x, float y)
 {
     return sqrt(x * x + y * y);
 }
-bool opening_game(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
+bool openingGame(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
 {
     //170, 30, 199
     int r = 170, g = 30, b = 199;
     int counter = 1;
     int loadVal = 0;
     bool up = 1;
-    bool windowClosed = 0;
-    sf::Text loadText, titleText, tagName;
+    bool window_closed = 0;
+
+    sf::Text load_text, title_text, tag_name;
     sf::Font font, font2; //fon2 = arial
-    sf::RectangleShape loadGraph;
+    sf::RectangleShape load_graph;
+    // sf::Music musik;
+    // if(musik.openFromFile("../asset/audio/aku.flac"));
+    // musik.play();
+
+    //==== load fonts ====
     font.loadFromFile("../asset/fonts/font1.ttf");
     font2.loadFromFile("../asset/fonts/arial.ttf");
 
-    loadText.setFont(font);
-    loadText.setString("Loading, Please wait..");
-    loadText.setPosition(sf::Vector2f(225, 200));
-    loadText.setCharacterSize(60);
-    loadText.setFillColor(sf::Color(198, 16, 235, 255));
+    //==== making text ====
+    load_text.setFont(font);
+    load_text.setString("Loading, Please wait..");
+    load_text.setPosition(sf::Vector2f(225, 200));
+    load_text.setCharacterSize(60);
+    load_text.setFillColor(sf::Color(198, 16, 235, 255));
 
-    titleText.setFont(font);
-    titleText.setString("Destroyer");
-    titleText.setPosition(sf::Vector2f(280, 50));
-    titleText.setCharacterSize(90);
-    titleText.setFillColor(sf::Color(r, g, b, 255));
+    title_text.setFont(font);
+    title_text.setString("Destroyer");
+    title_text.setPosition(sf::Vector2f(280, 50));
+    title_text.setCharacterSize(90);
+    title_text.setFillColor(sf::Color(r, g, b, 255));
 
-    tagName.setFont(font2);
-    tagName.setString("Azzam Wildan Maulana - 5024201010");
-    tagName.setPosition(sf::Vector2f(130, 500));
-    tagName.setCharacterSize(30);
-    tagName.setFillColor(sf::Color(11, 227, 216, 255));
+    tag_name.setFont(font2);
+    tag_name.setString("Azzam Wildan Maulana - 5024201010");
+    tag_name.setPosition(sf::Vector2f(130, 500));
+    tag_name.setCharacterSize(30);
+    tag_name.setFillColor(sf::Color(11, 227, 216, 255));
 
-    loadGraph.setPosition(sf::Vector2f(100, 300));
-    loadGraph.setSize(sf::Vector2f(loadVal, 50));
-    loadGraph.setFillColor(sf::Color(0, 234, 212, 255));
+    load_graph.setPosition(sf::Vector2f(100, 300));
+    load_graph.setSize(sf::Vector2f(loadVal, 50));
+    load_graph.setFillColor(sf::Color(0, 234, 212, 255));
+
+    //==== load buffer sound ====
+
+    //==== load sound ====
 
     while (1)
     {
-        // printf("%d\n", windowClosed);
+        // printf("%d\n", window_closed);
         // printf("%d %d %d\n", r, g, b);
         if (counter >= 10000)
         {
@@ -99,21 +110,21 @@ bool opening_game(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *curs
             if (event->type == sf::Event::Closed)
             {
                 window->close();
-                windowClosed = 1;
+                window_closed = 1;
                 return 0;
             }
         }
         window->clear(sf::Color(0, 0, 0, 255));
-        if (windowClosed)
+        if (window_closed)
             break;
 
-        titleText.setFillColor(sf::Color(r, g, b, 255));
-        loadGraph.setSize(sf::Vector2f(loadVal, 50));
+        title_text.setFillColor(sf::Color(r, g, b, 255));
+        load_graph.setSize(sf::Vector2f(loadVal, 50));
 
-        window->draw(titleText);
-        window->draw(loadText);
-        window->draw(tagName);
-        window->draw(loadGraph);
+        window->draw(title_text);
+        window->draw(load_text);
+        window->draw(tag_name);
+        window->draw(load_graph);
 
         window->display();
         counter++;
@@ -160,7 +171,7 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
     int counter = 1;
     bool up = 1;
     bool startisClicked = 0, backisClicked = 0;
-    sf::Text startText, backText, hintText, hintTitleText, objectiveText;
+    sf::Text startText, backText, hintText, hinttitle_text, objectiveText;
     sf::VertexArray hintCover(sf::LinesStrip, 5);
     sf::Font font1, font;
     font1.loadFromFile("../asset/fonts/font2.ttf");
@@ -178,11 +189,11 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
     startText.setCharacterSize(90);
     startText.setFillColor(sf::Color(r, g, b, 255));
 
-    hintTitleText.setFont(font1);
-    hintTitleText.setString("Hint:");
-    hintTitleText.setPosition(sf::Vector2f(360, 75));
-    hintTitleText.setCharacterSize(40);
-    hintTitleText.setFillColor(sf::Color(r, g, b, 255));
+    hinttitle_text.setFont(font1);
+    hinttitle_text.setString("Hint:");
+    hinttitle_text.setPosition(sf::Vector2f(360, 75));
+    hinttitle_text.setCharacterSize(40);
+    hinttitle_text.setFillColor(sf::Color(r, g, b, 255));
 
     hintText.setFont(font1);
     hintText.setString("Use right-click to move\n  Use left-click to fire");
@@ -218,7 +229,7 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
 
         window->draw(startText);
         window->draw(hintCover);
-        window->draw(hintTitleText);
+        window->draw(hinttitle_text);
         window->draw(hintText);
         window->draw(objectiveText);
         window->draw(backText);
@@ -264,23 +275,28 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
         }
     }
 }
-bool main_menu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
+bool mainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
 {
     int r = 170, g = 30, b = 199;
     int counter = 1;
     int singlePlayerChoice = 0;
     bool up = 1;
     bool singlePlayerisClick = 0, optionsisClick = 0, exitisClick = 0;
-    sf::Text singlePlayer, titleText, options, exitText;
+    sf::Text singlePlayer, title_text, options, exitText;
     sf::Font font1, font;
+    sf::Music musik;
+
+    if (musik.openFromFile("../asset/audio/main_menu_theme_song.flac"))
+        ;
+    musik.play();
     font1.loadFromFile("../asset/fonts/font2.ttf");
     font.loadFromFile("../asset/fonts/font1.ttf");
 
-    titleText.setFont(font);
-    titleText.setString("Destroyer");
-    titleText.setPosition(sf::Vector2f(270, 30));
-    titleText.setCharacterSize(90);
-    titleText.setFillColor(sf::Color(r, g, b, 255));
+    title_text.setFont(font);
+    title_text.setString("Destroyer");
+    title_text.setPosition(sf::Vector2f(270, 30));
+    title_text.setCharacterSize(90);
+    title_text.setFillColor(sf::Color(r, g, b, 255));
 
     singlePlayer.setFont(font1);
     singlePlayer.setString("Single Player"); //260 210 sampai 525 255
@@ -318,10 +334,10 @@ bool main_menu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1
         }
         window->clear(sf::Color(0, 0, 0, 255));
 
-        titleText.setFillColor(sf::Color(r, g, b, 255));
+        title_text.setFillColor(sf::Color(r, g, b, 255));
 
         window->draw(singlePlayer);
-        window->draw(titleText);
+        window->draw(title_text);
         window->draw(options);
         window->draw(exitText);
 
@@ -343,12 +359,12 @@ bool main_menu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1
             singlePlayer.setFillColor(sf::Color(255, 72, 0, 255));
         }
 
+        //options
         if (cursor1->x >= 310 && cursor1->x <= 455 && cursor1->y >= 340 && cursor1->y <= 375)
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 optionsisClick = 1;
-                // printf("Single player clicked!\n");
             }
             options.setFillColor(sf::Color(255, 99, 0, 255));
         }
@@ -483,7 +499,7 @@ bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
         }
     }
 }
-int game_over(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
+int gameOver(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor)
 {
     int r = 170, g = 30, b = 199;
     int counter = 1;
@@ -620,7 +636,7 @@ int game_over(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1,
         if (mainmenuisClick)
         {
             return 1;
-            // if (!main_menu(window, event, cursor1, main_sursor))
+            // if (!mainMenu(window, event, cursor1, main_sursor))
             //     return 0;
         }
 
@@ -638,7 +654,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     uint64_t timer = 1;
     bool isGameplayed = 1;
 
-    main_char Naruto;
+    MainChar Naruto;
     Naruto.setWindow(window);
     Naruto.setTarPos(400, 500);
 
@@ -719,16 +735,16 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             }
         }
 
-        if (timer % 1000 == 0 && !turret.timeToFire)
+        if (timer % 1000 == 0 && !turret.time_to_fire)
         {
             // printf("here\n");
-            turret.timeToFire = 1;
-            turet.timeToFire = 1;
-            tower.timeToFire = 1;
-            toret.timeToFire = 1;
+            turret.time_to_fire = 1;
+            turet.time_to_fire = 1;
+            tower.time_to_fire = 1;
+            toret.time_to_fire = 1;
         }
-        // printf("fire=%d ", turret.timeToFire);
-        if (turret.timeToFire)
+        // printf("fire=%d ", turret.time_to_fire);
+        if (turret.time_to_fire)
         {
             // printf("nyowo: %f\n", Naruto.getHP());
             // printf("%f %f\n", turret.bullet.getXpos(), turret.bullet.getYpos());
@@ -737,10 +753,10 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(turret.bullet.getXpos(), turret.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                turret.setBulletHitted(1);
+                turret.setbullet_hitted(1);
             }
         }
-        if (turet.timeToFire)
+        if (turet.time_to_fire)
         {
             // printf("nyowo: %f\n", Naruto.getHP());
             // printf("%f %f\n", turet.bullet.getXpos(), turet.bullet.getYpos());
@@ -749,10 +765,10 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(turet.bullet.getXpos(), turet.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                turet.setBulletHitted(1);
+                turet.setbullet_hitted(1);
             }
         }
-        if (tower.timeToFire)
+        if (tower.time_to_fire)
         {
             // printf("nyowo: %f\n", Naruto.getHP());
             // printf("%f %f\n", tower.bullet.getXpos(), tower.bullet.getYpos());
@@ -761,10 +777,10 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(tower.bullet.getXpos(), tower.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                tower.setBulletHitted(1);
+                tower.setbullet_hitted(1);
             }
         }
-        if (toret.timeToFire)
+        if (toret.time_to_fire)
         {
             // printf("nyowo: %f\n", Naruto.getHP());
             // printf("%f %f\n", toret.bullet.getXpos(), toret.bullet.getYpos());
@@ -773,7 +789,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(toret.bullet.getXpos(), toret.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                toret.setBulletHitted(1);
+                toret.setbullet_hitted(1);
             }
         }
 
@@ -789,7 +805,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
         {
             isGameplayed = 0;
             // printf("game over :(\n");
-            if (!game_over(window, event, cursor1, main_sursor))
+            if (!gameOver(window, event, cursor1, main_sursor))
             {
                 return 0;
             }

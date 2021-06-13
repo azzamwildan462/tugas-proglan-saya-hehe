@@ -2,7 +2,7 @@
 #include "../include/main_char.h"
 #include "../include/mylib.h"
 
-void main_char::draw()
+void MainChar::draw()
 {
     this->init();
     this->window->draw(this->body);
@@ -18,12 +18,12 @@ void main_char::draw()
     }
 }
 
-void main_char::setWindow(sf::RenderWindow *window)
+void MainChar::setWindow(sf::RenderWindow *window)
 {
     this->window = window;
 }
 
-void main_char::init()
+void MainChar::init()
 {
     this->body.setPosition(sf::Vector2f(this->xpos, this->ypos));
     this->body.setSize(sf::Vector2f(100, 150));
@@ -56,7 +56,7 @@ void main_char::init()
     this->color.setSize(sf::Vector2f(80, 40));
     this->color.setScale(sf::Vector2f(this->scale, this->scale));
     this->color.setOrigin(sf::Vector2f(40, 20));
-    this->color.setFillColor(sf::Color(this->playerColor[0], this->playerColor[1], this->playerColor[2], this->playerColor[3]));
+    this->color.setFillColor(sf::Color(this->player_color[0], this->player_color[1], this->player_color[2], this->player_color[3]));
     this->color.setOutlineThickness(2);
     this->color.setOutlineColor(sf::Color(170, 0, 196, 255));
     this->color.setRotation(this->angle);
@@ -68,51 +68,51 @@ void main_char::init()
     this->Hitpoints.setFillColor(sf::Color(((100 - this->HP) * 255 / 100), (255 - ((100 - this->HP) * 255 / 100)), 0, 255));
 }
 
-void main_char::getPosition(float *xpos, float *ypos)
+void MainChar::getPosition(float *xpos, float *ypos)
 {
     *xpos = this->xpos;
     *ypos = this->ypos;
 }
-float main_char::getXpos()
+float MainChar::getXpos()
 {
     return this->xpos;
 }
-float main_char::getypos()
+float MainChar::getypos()
 {
     return this->ypos;
 }
-void main_char::setRotation(float angle)
+void MainChar::setRotation(float angle)
 {
     this->body.setRotation(angle);
     this->head.setRotation(angle);
     this->gun.setRotation(angle);
     this->color.setRotation(angle);
 }
-void main_char::setPlayerColor(float r, float g, float b, float a)
+void MainChar::setplayer_color(float r, float g, float b, float a)
 {
-    this->playerColor[0] = r;
-    this->playerColor[1] = g;
-    this->playerColor[2] = b;
-    this->playerColor[3] = a;
+    this->player_color[0] = r;
+    this->player_color[1] = g;
+    this->player_color[2] = b;
+    this->player_color[3] = a;
 }
-void main_char::setPosition(float xpos, float ypos, float angle)
+void MainChar::setPosition(float xpos, float ypos, float angle)
 {
     this->xpos = xpos;
     this->ypos = ypos;
     this->angle = angle;
 }
-void main_char::setAngle(float angle)
+void MainChar::setAngle(float angle)
 {
     this->angle = angle;
 }
-void main_char::move(sf::Vector2i cursor)
+void MainChar::move(sf::Vector2i cursor)
 {
     if (this->isMove())
     {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) //ngambil target baru
         {
             cursor = sf::Mouse::getPosition(*this->window);
-            this->angle = find_direction(this->xpos, this->ypos, cursor.x, cursor.y);
+            this->angle = findDirection(this->xpos, this->ypos, cursor.x, cursor.y);
             this->xtar = cursor.x;
             this->ytar = cursor.y;
             this->dx = xtar - this->xpos;
@@ -126,100 +126,100 @@ void main_char::move(sf::Vector2i cursor)
     }
     else
     {
-        this->angle = find_direction(this->xpos, this->ypos, cursor.x, cursor.y);
+        this->angle = findDirection(this->xpos, this->ypos, cursor.x, cursor.y);
         this->xtar = cursor.x;
         this->ytar = cursor.y;
-        // main_char::init();
+        // MainChar::init();
     }
 }
-float main_char::getAngle()
+float MainChar::getAngle()
 {
     return this->angle;
 }
-void main_char::setScale(float scale)
+void MainChar::setScale(float scale)
 {
     this->scale = scale;
 }
-bool main_char::isMove()
+bool MainChar::isMove()
 {
     if (this->xtar <= this->xpos + 1 && this->xtar >= this->xpos - 1 && this->ytar <= this->ypos + 1 && this->ytar >= this->ypos - 1)
-    {
+    { //kalo sudah sampek
         return 0;
     }
     else
-    {
+    { //kalo belum sampek maka jalan
         return 1;
     }
 }
-void main_char::setSpeed(float speed)
+void MainChar::setSpeed(float speed)
 {
     this->speed = speed;
 }
-void main_char::fire()
+void MainChar::fire()
 {
-    if (!this->setFirst)
+    if (!this->set_first)
     {
-        // this->bulletHitted = 0;
+        // this->bullet_hitted = 0;
         this->bullet.setPosition(this->xpos, this->ypos);
         this->bullet.setDxDyR(this->dx, this->dy, this->r);
         this->bullet.setWindow(this->window);
         this->bullet.setHit(0);
-        this->setFirst = 1;
+        this->set_first = 1;
         // printf("%f %f %f\n", this->dx, this->dy, this->r);
     }
     this->fire_ing = 1;
     this->bullet.move();
-    if (this->bullet.getXpos() <= 0 || this->bullet.getXpos() >= 800 || this->bullet.getYpos() <= 0 || this->bullet.getYpos() >= 800 || this->bulletHitted)
+    if (this->bullet.getXpos() <= 0 || this->bullet.getXpos() >= 800 || this->bullet.getYpos() <= 0 || this->bullet.getYpos() >= 800 || this->bullet_hitted)
     {
-        // this->bulletHitted = 1;
+        // this->bullet_hitted = 1;
         this->bullet.setHit(1);
-        this->setFirst = 0;
+        this->set_first = 0;
         this->fire_ing = 0;
     }
 }
-bool main_char::isFire()
+bool MainChar::isFire()
 {
     return this->fire_ing;
 }
-float main_char::getXbullet()
+float MainChar::getXbullet()
 {
     return this->bullet.getXpos();
 }
-float main_char::getYbullet()
+float MainChar::getYbullet()
 {
     return this->bullet.getYpos();
 }
-float main_char::getHitBullet()
+float MainChar::getHitBullet()
 {
     return this->bullet.isHitted();
 }
-void main_char::setHitBullet(bool isBullethitted)
+void MainChar::setHitBullet(bool isbullet_hitted)
 {
-    this->bulletHitted = isBullethitted;
+    this->bullet_hitted = isbullet_hitted;
 }
-void main_char::setTarPos(float x, float y)
+void MainChar::setTarPos(float x, float y)
 {
     this->xpos = x;
     this->ypos = y;
     this->xtar = x;
     this->ytar = y;
 }
-void main_char::teleport(float xpos, float ypos)
+void MainChar::teleport(float xpos, float ypos)
 {
     this->xpos = xpos;
     this->ypos = ypos;
     this->xtar = xpos;
     this->ytar = ypos;
 }
-void main_char::setHP(float hp)
+void MainChar::setHP(float hp)
 {
     this->HP = hp;
 }
-float main_char::getHP()
+float MainChar::getHP()
 {
     return this->HP;
 }
-bool main_char::isHittedFrom(float x, float y)
+bool MainChar::isHittedFrom(float x, float y)
 {
     x -= this->xpos;
     y -= this->ypos;
@@ -227,7 +227,7 @@ bool main_char::isHittedFrom(float x, float y)
         x *= -1;
     if (y < 0)
         y *= -1;
-    if (x < this->hitAreaX && y < this->hitAreaY)
+    if (x < this->hit_area_x && y < this->hit_area_y)
     {
         this->HP -= 10;
         return 1;
