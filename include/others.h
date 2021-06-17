@@ -60,6 +60,7 @@ private:
     bool fire_ing = 0;
     bool bullet_hitted = 0;
     bool destroyed_sound_played = 0;
+    bool hitted_sound_played = 0;
 
     //==== Instance ====
     sf::CircleShape body, head;
@@ -84,7 +85,7 @@ public:
     void setWindow(sf::RenderWindow *window);
     void draw();
     void setColor(float r, float g, float b, float a);
-    void find_target(float xtar, float ytar);
+    void findTarget(float xtar, float ytar);
     void setAngle(float angle);
     void fire();
     bool isFire();
@@ -93,7 +94,7 @@ public:
     bool isHitted();
     bool isDestroy();
     void setDamagefromTank(int damage);
-    void setbullet_hitted(bool state);
+    void setBulletHitted(bool state);
 };
 
 #endif

@@ -45,7 +45,7 @@ void linearLineInvers(float *x, float y, float x0, float y0, float x1, float y1)
     *x = ((x1 - x0) * (y - y0) / (y1 - y0)) + x0;
 }
 
-float find_r(float x, float y)
+float findR(float x, float y)
 {
     return sqrt(x * x + y * y);
 }
@@ -174,6 +174,9 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
     sf::Text startText, backText, hintText, hinttitle_text, objectiveText;
     sf::VertexArray hintCover(sf::LinesStrip, 5);
     sf::Font font1, font;
+    sf::SoundBuffer game_started;
+    sf::Sound game_started_sound;
+
     font1.loadFromFile("../asset/fonts/font2.ttf");
     font.loadFromFile("../asset/fonts/font1.ttf");
 
@@ -212,6 +215,10 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
     backText.setPosition(sf::Vector2f(240, 480));
     backText.setCharacterSize(40);
     backText.setFillColor(sf::Color(255, 72, 0, 255));
+
+    if (game_started.loadFromFile("../asset/audio/effects/started.wav"))
+        ;
+    game_started_sound.setBuffer(game_started);
 
     while (1)
     {
@@ -265,7 +272,141 @@ int singlePlayerMainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2
 
         if (startisClicked)
         {
+            //disini setel
+            game_started_sound.play();
             return 2;
+        }
+
+        if (backisClicked)
+        {
+            // window->close();
+            return 0;
+        }
+    }
+}
+int optionsMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf::Cursor *main_sursor, int *volume)
+{
+    bool backisClicked = 0;
+    sf::Text volume_label_text, volume_value_text, backText;
+    sf::Font arial, font1;
+    sf::VertexArray up_volume(sf::Triangles, 3);
+    sf::VertexArray down_volume(sf::Triangles, 3);
+    arial.loadFromFile("../asset/fonts/arial.ttf");
+    font1.loadFromFile("../asset/fonts/font2.ttf");
+
+    volume_label_text.setFont(arial);
+    volume_label_text.setString("Volume: ");
+    volume_label_text.setPosition(sf::Vector2f(40, 30));
+    volume_label_text.setCharacterSize(40);
+    volume_label_text.setFillColor(sf::Color(255, 72, 0, 255));
+
+    std::string value_music_volume(std::to_string(*volume));
+    volume_value_text.setFont(arial);
+    volume_value_text.setString(value_music_volume);
+    volume_value_text.setPosition(sf::Vector2f(200, 30));
+    volume_value_text.setCharacterSize(40);
+    volume_value_text.setFillColor(sf::Color(255, 72, 0, 255));
+
+    backText.setFont(font1);
+    backText.setString("Back to the Main Menu");
+    backText.setPosition(sf::Vector2f(240, 480));
+    backText.setCharacterSize(40);
+    backText.setFillColor(sf::Color(255, 72, 0, 255));
+
+    down_volume[0].position = sf::Vector2f(350, 40); //325,40 sampe 345,65
+    down_volume[1].position = sf::Vector2f(350, 70);
+    down_volume[2].position = sf::Vector2f(325, 55);
+    down_volume[0].color = sf::Color(20, 0, 255, 255);
+    down_volume[1].color = sf::Color(20, 0, 255, 255);
+    down_volume[2].color = sf::Color(0, 0, 255, 255);
+
+    up_volume[0].position = sf::Vector2f(375, 40); //375,65 sampe 390,55
+    up_volume[1].position = sf::Vector2f(375, 70);
+    up_volume[2].position = sf::Vector2f(400, 55);
+    up_volume[0].color = sf::Color(255, 0, 20, 255);
+    up_volume[1].color = sf::Color(255, 0, 20, 255);
+    up_volume[2].color = sf::Color(255, 0, 0, 255);
+
+    while (1)
+    {
+        *cursor1 = sf::Mouse::getPosition(*window);
+        // printf("%d %d\n", cursor1->x, cursor1->y);
+        while (window->pollEvent(*event))
+        {
+            if (event->type == sf::Event::Closed)
+            {
+                window->close();
+                return 1;
+            }
+        }
+        window->clear();
+
+        std::string value_music_volume(std::to_string(*volume));
+        // volume_value_text.setFont(arial);
+        volume_value_text.setString(value_music_volume);
+
+        window->draw(volume_label_text);
+        window->draw(volume_value_text);
+        window->draw(up_volume);
+        window->draw(down_volume);
+        window->draw(backText);
+
+        window->display();
+
+        if (cursor1->x >= 240 && cursor1->x <= 540 && cursor1->y >= 480 && cursor1->y <= 515)
+        {
+            backText.setFillColor(sf::Color(255, 99, 0, 255));
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                backisClicked = 1;
+                // printf("Single player clicked!\n");
+            }
+        }
+        else
+        {
+            backText.setFillColor(sf::Color(255, 72, 0, 255));
+        }
+
+        if (cursor1->x >= 325 && cursor1->x <= 345 && cursor1->y >= 40 && cursor1->y <= 65)
+        {
+            down_volume[0].position = sf::Vector2f(350, 30); //325,40 sampe 345,65
+            down_volume[1].position = sf::Vector2f(350, 80);
+            down_volume[2].position = sf::Vector2f(315, 55);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                if (*volume - 1 >= 0)
+                {
+                    *volume -= 1;
+                }
+                // printf("Single player clicked!\n");
+            }
+        }
+        else
+        {
+            down_volume[0].position = sf::Vector2f(350, 40); //325,40 sampe 345,65
+            down_volume[1].position = sf::Vector2f(350, 70);
+            down_volume[2].position = sf::Vector2f(325, 55);
+        }
+
+        if (cursor1->x >= 375 && cursor1->x <= 390 && cursor1->y >= 40 && cursor1->y <= 65)
+        {
+            up_volume[0].position = sf::Vector2f(375, 30); //375,65 sampe 390,55
+            up_volume[1].position = sf::Vector2f(375, 80);
+            up_volume[2].position = sf::Vector2f(410, 55);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                if (*volume + 1 <= 100)
+                {
+                    *volume += 1;
+                }
+                // printf("Single player clicked!\n");
+            }
+        }
+        else
+        {
+            up_volume[0].position = sf::Vector2f(375, 40); //375,65 sampe 390,55
+            up_volume[1].position = sf::Vector2f(375, 70);
+            up_volume[2].position = sf::Vector2f(400, 55);
         }
 
         if (backisClicked)
@@ -279,16 +420,20 @@ bool mainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1,
 {
     int r = 170, g = 30, b = 199;
     int counter = 1;
-    int singlePlayerChoice = 0;
+    int singlePlayerChoice = 0, optionsChoice = 0;
     bool up = 1;
     bool singlePlayerisClick = 0, optionsisClick = 0, exitisClick = 0;
+    int music_volume = 100;
     sf::Text singlePlayer, title_text, options, exitText;
     sf::Font font1, font;
     sf::Music musik;
+    sf::Time play_song_offsite = sf::milliseconds(12000);
 
     if (musik.openFromFile("../asset/audio/main_menu_theme_song.flac"))
         ;
+    musik.setPlayingOffset(play_song_offsite);
     musik.play();
+    musik.setLoop(1);
     font1.loadFromFile("../asset/fonts/font2.ttf");
     font.loadFromFile("../asset/fonts/font1.ttf");
 
@@ -318,6 +463,7 @@ bool mainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1,
 
     while (1)
     {
+        musik.setVolume(music_volume);
         *cursor1 = sf::Mouse::getPosition(*window);
         // printf("%d %d\n", cursor1->x, cursor1->y);
         if (counter >= 10000)
@@ -391,15 +537,25 @@ bool mainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1,
         if (singlePlayerisClick)
         {
             singlePlayerChoice = singlePlayerMainMenu(window, event, cursor1, main_sursor);
-            if (singlePlayerChoice == 1)
+            if (singlePlayerChoice == 1) //exit
             {
                 return 0;
             }
-            if (singlePlayerChoice == 2)
+            if (singlePlayerChoice == 2) //start
             {
                 return 1;
             }
             singlePlayerisClick = 0;
+        }
+
+        if (optionsisClick)
+        {
+            optionsChoice = optionsMenu(window, event, cursor1, main_sursor, &music_volume);
+            if (optionsChoice == 1)
+            {
+                return 0;
+            }
+            optionsisClick = 0;
         }
 
         if (exitisClick)
@@ -653,8 +809,10 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     bool f10Pressed = 0;
     uint64_t timer = 1;
     bool isGameplayed = 1;
+    sf::Time play_sound_offside = sf::milliseconds(3000);
 
     MainChar Naruto;
+    sf::Music musik, started;
     Naruto.setWindow(window);
     Naruto.setTarPos(400, 500);
 
@@ -663,11 +821,11 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     turret.setPosition(100, 80);
     turret.setWindow(window);
     turret.font.loadFromFile("../asset/fonts/arial.ttf");
-    turret.setDamagefromTank(100); //penting ini
+    turret.setDamagefromTank(50); //penting ini
     turet.setPosition(300, 80);
     turet.setWindow(window);
     turet.font.loadFromFile("../asset/fonts/arial.ttf");
-    turet.setDamagefromTank(100);
+    turet.setDamagefromTank(40);
     tower.setPosition(500, 80);
     tower.setWindow(window);
     tower.font.loadFromFile("../asset/fonts/arial.ttf");
@@ -677,12 +835,28 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     toret.font.loadFromFile("../asset/fonts/arial.ttf");
     toret.setDamagefromTank(100);
 
+    if (started.openFromFile("../asset/audio/effects/started.wav"))
+        ;
+    started.play();
+
+    while (started.getStatus() != sf::Music::Stopped)
+    {
+        //menunggu sound started untuk selesai
+    }
+
+    if (musik.openFromFile("../asset/audio/game_theme_song.flac"))
+        ;
+    musik.setPlayingOffset(play_sound_offside);
+    musik.setVolume(70);
+    musik.play();
+    musik.setLoop(1);
+
     while (isGameplayed)
     {
-        turret.find_target(Naruto.getXpos(), Naruto.getypos());
-        turet.find_target(Naruto.getXpos(), Naruto.getypos());
-        tower.find_target(Naruto.getXpos(), Naruto.getypos());
-        toret.find_target(Naruto.getXpos(), Naruto.getypos());
+        turret.findTarget(Naruto.getXpos(), Naruto.getypos());
+        turet.findTarget(Naruto.getXpos(), Naruto.getypos());
+        tower.findTarget(Naruto.getXpos(), Naruto.getypos());
+        toret.findTarget(Naruto.getXpos(), Naruto.getypos());
         if (timer >= 10000)
         {
             timer = 1;
@@ -753,7 +927,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(turret.bullet.getXpos(), turret.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                turret.setbullet_hitted(1);
+                turret.setBulletHitted(1);
             }
         }
         if (turet.time_to_fire)
@@ -765,7 +939,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(turet.bullet.getXpos(), turet.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                turet.setbullet_hitted(1);
+                turet.setBulletHitted(1);
             }
         }
         if (tower.time_to_fire)
@@ -777,7 +951,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(tower.bullet.getXpos(), tower.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                tower.setbullet_hitted(1);
+                tower.setBulletHitted(1);
             }
         }
         if (toret.time_to_fire)
@@ -789,7 +963,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (Naruto.isHittedFrom(toret.bullet.getXpos(), toret.bullet.getYpos()))
             {
                 // printf("tesss\n");
-                toret.setbullet_hitted(1);
+                toret.setBulletHitted(1);
             }
         }
 

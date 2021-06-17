@@ -22,13 +22,20 @@ private:
     float HP = 100;
     float hit_area_x = 70, hit_area_y = 105; //kali 0.7
 
+    //==== sounding ====
+    bool is_tank_hitted_sound = 0;
+
     //==== instance ====
     sf::RectangleShape body, head, gun, color, Hitpoints;
     sf::RenderWindow *window;
     Bullet bullet;
+    sf::SoundBuffer tank_hitted, tank_fire, tank_move;
+    sf::Sound tank_hitted_sound, tank_fire_sound, tank_move_sound;
+    // sf::Music gas;
 
 public:
     //==== method ====
+    MainChar();
     void init();
     void setPosition(float xpos, float ypos, float angle);
     void draw();

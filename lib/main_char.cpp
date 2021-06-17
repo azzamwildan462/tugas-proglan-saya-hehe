@@ -117,9 +117,10 @@ void MainChar::move(sf::Vector2i cursor)
             this->ytar = cursor.y;
             this->dx = xtar - this->xpos;
             this->dy = ytar - this->ypos;
-            this->r = find_r(this->dx, this->dy);
+            this->r = findR(this->dx, this->dy);
             this->dx /= this->r;
             this->dy /= this->r;
+            tank_move_sound.play();
         }
         this->xpos += this->dx * this->speed;
         this->ypos += this->dy * this->speed;
@@ -164,6 +165,8 @@ void MainChar::fire()
         this->bullet.setDxDyR(this->dx, this->dy, this->r);
         this->bullet.setWindow(this->window);
         this->bullet.setHit(0);
+        tank_fire_sound.play();
+        // tank_move_sound.play();
         this->set_first = 1;
         // printf("%f %f %f\n", this->dx, this->dy, this->r);
     }
@@ -221,6 +224,7 @@ float MainChar::getHP()
 }
 bool MainChar::isHittedFrom(float x, float y)
 {
+    is_tank_hitted_sound = 0;
     x -= this->xpos;
     y -= this->ypos;
     if (x < 0)
@@ -229,9 +233,32 @@ bool MainChar::isHittedFrom(float x, float y)
         y *= -1;
     if (x < this->hit_area_x && y < this->hit_area_y)
     {
+        if (!is_tank_hitted_sound)
+        {
+            tank_hitted_sound.play();
+            is_tank_hitted_sound = 1;
+        }
         this->HP -= 10;
         return 1;
     }
     else
         return 0;
+}
+
+MainChar::MainChar()
+{
+    if (tank_fire.loadFromFile("../asset/audio/effects/tank_fire.wav"))
+        ;
+    tank_fire_sound.setBuffer(tank_fire);
+    tank_fire_sound.setVolume(60);
+    // tank_fire_sound.setPosition(sf::Vector3f(this->xpos, this->ypos, 1));
+
+    if (tank_hitted.loadFromFile("../asset/audio/effects/tank_hitted.wav"))
+        ;
+    tank_hitted_sound.setBuffer(tank_hitted);
+    tank_hitted_sound.setVolume(50);
+
+    if (tank_move.loadFromFile("../asset/audio/effects/tank_move.wav"))
+        ;
+    tank_move_sound.setBuffer(tank_move);
 }

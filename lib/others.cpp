@@ -157,12 +157,12 @@ void Enemy::setAngle(float angle)
 {
     this->angle = angle;
 }
-void Enemy::find_target(float xtar, float ytar)
+void Enemy::findTarget(float xtar, float ytar)
 {
     this->angle = findDirection(this->xpos, this->ypos, xtar, ytar);
     this->dx = xtar - this->xpos;
     this->dy = ytar - this->ypos;
-    this->r = find_r(this->dx, this->dy);
+    this->r = findR(this->dx, this->dy);
     this->dx /= this->r;
     this->dy /= this->r;
 }
@@ -173,6 +173,7 @@ void Enemy::setRelationWithTank(float xBulletPos, float yBulletPos)
 }
 bool Enemy::isHitted()
 {
+    hitted_sound_played = 0;
     this->x_bullet_from_tank -= this->xpos;
     this->y_bullet_from_tank -= this->ypos;
 
@@ -183,6 +184,11 @@ bool Enemy::isHitted()
 
     if (this->x_bullet_from_tank < this->scale && this->y_bullet_from_tank < this->scale)
     {
+        if (!hitted_sound_played)
+        {
+            tower_hitted_sound.play();
+            hitted_sound_played = 1;
+        }
         this->HP -= this->damage;
         this->hitted = 1;
         return 1;
@@ -241,7 +247,7 @@ void Enemy::fire()
         this->time_to_fire = 0;
     }
 }
-void Enemy::setbullet_hitted(bool state)
+void Enemy::setBulletHitted(bool state)
 {
     this->bullet.setHit(state);
     this->set_first = !state;
@@ -258,6 +264,7 @@ Enemy::Enemy()
     if (tower_fire.loadFromFile("../asset/audio/effects/tower_fire.wav")) //bermasalah dengan file
         ;
     tower_fire_sound.setBuffer(tower_fire);
+    tower_fire_sound.setVolume(50);
 
     if (tower_hitted.loadFromFile("../asset/audio/effects/tower_hitted.wav")) //bermasalah dengan file
         ;
