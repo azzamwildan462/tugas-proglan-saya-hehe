@@ -14,8 +14,8 @@ int main()
     tele_cursor.loadFromSystem(Cursor::Cross);
     window.setMouseCursor(move_cursor);
 
-    if (!openingGame(&window, &event_handler, &cursor, &move_cursor))
-        return 0;
+    // if (!openingGame(&window, &event_handler, &cursor, &move_cursor))
+    //     return 0;
 
     while (1)
     {

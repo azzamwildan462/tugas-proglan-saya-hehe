@@ -553,6 +553,7 @@ bool mainMenu(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1,
             optionsChoice = optionsMenu(window, event, cursor1, main_sursor, &music_volume);
             if (optionsChoice == 1)
             {
+                optionsisClick = 0;
                 return 0;
             }
             optionsisClick = 0;
@@ -595,11 +596,12 @@ bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
 {
     int r = 170, g = 30, b = 199;
     int counter = 1;
-    bool up = 1;
-    sf::Text victoryText;
-    sf::Font font1;
+    bool up = 1, backisClicked = 0;
+    sf::Text victoryText, credit_text, thx_text, backText;
+    sf::Font font1, font2;
 
     font1.loadFromFile("../asset/fonts/arial.ttf");
+    font2.loadFromFile("../asset/fonts/font2.ttf");
 
     victoryText.setFont(font1);
     victoryText.setString("Victory");
@@ -607,8 +609,27 @@ bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
     victoryText.setCharacterSize(90);
     victoryText.setFillColor(sf::Color(r, g, b, 255));
 
+    thx_text.setFont(font1);
+    thx_text.setString("Special thanks to: ");
+    thx_text.setPosition(sf::Vector2f(240, 220));
+    thx_text.setCharacterSize(40);
+    thx_text.setFillColor(sf::Color(r, g, b, 255));
+
+    credit_text.setFont(font2);
+    credit_text.setString("Allah SWT \nSegenap guru dan dosen \nSemua teman-teman \nOrang tua saya");
+    credit_text.setPosition(sf::Vector2f(320, 290));
+    credit_text.setCharacterSize(20);
+    credit_text.setFillColor(sf::Color(255, 72, 0, 255));
+
+    backText.setFont(font2);
+    backText.setString("Back to the Main Menu");
+    backText.setPosition(sf::Vector2f(240, 480));
+    backText.setCharacterSize(40);
+    backText.setFillColor(sf::Color(255, 72, 0, 255));
+
     while (1)
     {
+        *cursor1 = sf::Mouse::getPosition(*window);
         while (window->pollEvent(*event))
         {
             if (event->type == sf::Event::Closed)
@@ -621,8 +642,30 @@ bool victory(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
 
         victoryText.setFillColor(sf::Color(r, g, b, 255));
         window->draw(victoryText);
+        window->draw(credit_text);
+        window->draw(thx_text);
+        window->draw(backText);
 
         window->display();
+
+        if (cursor1->x >= 240 && cursor1->x <= 540 && cursor1->y >= 480 && cursor1->y <= 515)
+        {
+            backText.setFillColor(sf::Color(255, 99, 0, 255));
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                backisClicked = 1;
+                // printf("Single player clicked!\n");
+            }
+        }
+        else
+        {
+            backText.setFillColor(sf::Color(255, 72, 0, 255));
+        }
+
+        if (backisClicked)
+        {
+            return 1;
+        }
 
         //kelap kelip
         if (counter % 20 == 0)
@@ -821,11 +864,11 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     turret.setPosition(100, 80);
     turret.setWindow(window);
     turret.font.loadFromFile("../asset/fonts/arial.ttf");
-    turret.setDamagefromTank(50); //penting ini
+    turret.setDamagefromTank(100); //penting ini
     turet.setPosition(300, 80);
     turet.setWindow(window);
     turet.font.loadFromFile("../asset/fonts/arial.ttf");
-    turet.setDamagefromTank(40);
+    turet.setDamagefromTank(100);
     tower.setPosition(500, 80);
     tower.setWindow(window);
     tower.font.loadFromFile("../asset/fonts/arial.ttf");
@@ -973,6 +1016,10 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             if (!victory(window, event, cursor1, main_sursor))
             {
                 return 0;
+            }
+            else
+            {
+                return 1;
             }
         }
         if (Naruto.getHP() <= 0)
