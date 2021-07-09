@@ -1,7 +1,10 @@
 #include "../include/mylib.h"
 #include "../include/main_char.h"
 #include "../include/others.h"
+#include "../include/koneksi.h"
 #include "math.h"
+
+Koneksi *koneksi = Koneksi::getInstance(); //coba
 
 float findDirection(float xpos, float ypos, float xtarget, float ytarget)
 {
@@ -755,7 +758,7 @@ int gameOver(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
         loseText.setFillColor(sf::Color(r, g, b, 255));
 
         window->draw(loseText);
-        window->draw(replayText);
+        // window->draw(replayText);
         window->draw(mainmenuText);
         window->draw(exitText);
 
@@ -764,19 +767,19 @@ int gameOver(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, 
         counter++;
 
         //hover
-        if (cursor1->x >= 310 && cursor1->x <= 445 && cursor1->y >= 275 && cursor1->y <= 300)
-        {
-            replayText.setFillColor(sf::Color(255, 99, 0, 255));
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-            {
-                replayisClick = 1;
-                // printf("Single player clicked!\n");
-            }
-        }
-        else
-        {
-            replayText.setFillColor(sf::Color(255, 72, 0, 255));
-        }
+        // if (cursor1->x >= 310 && cursor1->x <= 445 && cursor1->y >= 275 && cursor1->y <= 300)
+        // {
+        //     replayText.setFillColor(sf::Color(255, 99, 0, 255));
+        //     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        //     {
+        //         replayisClick = 1;
+        //         // printf("Single player clicked!\n");
+        //     }
+        // }
+        // else
+        // {
+        //     replayText.setFillColor(sf::Color(255, 72, 0, 255));
+        // }
 
         if (cursor1->x >= 230 && cursor1->x <= 530 && cursor1->y >= 345 && cursor1->y <= 370)
         {
@@ -878,6 +881,8 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
     toret.font.loadFromFile("../asset/fonts/arial.ttf");
     toret.setDamagefromTank(100);
 
+    // toret.~Enemy();
+
     if (started.openFromFile("../asset/audio/effects/started.wav"))
         ;
     started.play();
@@ -896,6 +901,7 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
 
     while (isGameplayed)
     {
+        // printf("%s\n", koneksi->data_terima);
         turret.findTarget(Naruto.getXpos(), Naruto.getypos());
         turet.findTarget(Naruto.getXpos(), Naruto.getypos());
         tower.findTarget(Naruto.getXpos(), Naruto.getypos());
@@ -952,14 +958,26 @@ int game1(sf::RenderWindow *window, sf::Event *event, sf::Vector2i *cursor1, sf:
             }
         }
 
-        if (timer % 1000 == 0 && !turret.time_to_fire)
-        {
-            // printf("here\n");
+        // if (timer % 1000 == 0 && !turret.time_to_fire && !turet.time_to_fire &&
+        //     !tower.time_to_fire && !toret.time_to_fire)
+        // {
+        //     // printf("here\n");
+        //     turret.time_to_fire = 1;
+        //     turet.time_to_fire = 1;
+        //     tower.time_to_fire = 1;
+        //     toret.time_to_fire = 1;
+        // }
+
+        //pengaturan kapan musuh nembak
+        if (timer % 1000 == 0 && !turret.time_to_fire && !turret.isDestroy())
             turret.time_to_fire = 1;
+        if (timer % 2000 == 0 && !turet.time_to_fire && !turet.isDestroy())
             turet.time_to_fire = 1;
+        if (timer % 1500 == 0 && !tower.time_to_fire && !tower.isDestroy())
             tower.time_to_fire = 1;
+        if (timer % 4000 == 0 && !toret.time_to_fire && !toret.isDestroy())
             toret.time_to_fire = 1;
-        }
+
         // printf("fire=%d ", turret.time_to_fire);
         if (turret.time_to_fire)
         {

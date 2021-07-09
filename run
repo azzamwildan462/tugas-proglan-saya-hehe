@@ -3,5 +3,6 @@ g++ ../src/main.cpp -c
 g++ ../lib/functions.cpp -c
 g++ ../lib/main_char.cpp -c
 g++ ../lib/others.cpp -c
-g++ main.o functions.o others.o main_char.o -o Destroyer -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+g++ ../lib/koneksi.cpp -c
+g++ main.o functions.o koneksi.o others.o main_char.o -o Destroyer -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
 ./Destroyer

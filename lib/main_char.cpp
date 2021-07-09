@@ -120,10 +120,21 @@ void MainChar::move(sf::Vector2i cursor)
             this->r = findR(this->dx, this->dy);
             this->dx /= this->r;
             this->dy /= this->r;
-            tank_move_sound.play();
+            // tank_move_sound.play();
         }
-        this->xpos += this->dx * this->speed;
-        this->ypos += this->dy * this->speed;
+        if (this->xpos + this->dx * this->speed <= 0)
+            this->xpos = 0;
+        else if (this->xpos + this->dx * this->speed >= 800)
+            this->xpos = 800;
+        else
+            this->xpos += this->dx * this->speed;
+
+        if (this->ypos + this->dy * this->speed <= 260)
+            this->ypos = 260;
+        else if (this->ypos + this->dy * this->speed >= 540)
+            this->ypos = 540;
+        else
+            this->ypos += this->dy * this->speed;
     }
     else
     {
@@ -172,7 +183,7 @@ void MainChar::fire()
     }
     this->fire_ing = 1;
     this->bullet.move();
-    if (this->bullet.getXpos() <= 0 || this->bullet.getXpos() >= 800 || this->bullet.getYpos() <= 0 || this->bullet.getYpos() >= 800 || this->bullet_hitted)
+    if (this->bullet.getXpos() <= 0 || this->bullet.getXpos() >= 800 || this->bullet.getYpos() <= 0 || this->bullet.getYpos() >= 600 || this->bullet_hitted)
     {
         // this->bullet_hitted = 1;
         this->bullet.setHit(1);
@@ -258,7 +269,7 @@ MainChar::MainChar()
     tank_hitted_sound.setBuffer(tank_hitted);
     tank_hitted_sound.setVolume(50);
 
-    if (tank_move.loadFromFile("../asset/audio/effects/tank_move.wav"))
-        ;
-    tank_move_sound.setBuffer(tank_move);
+    // if (tank_move.loadFromFile("../asset/audio/effects/tank_move.wav"))
+    //     ;
+    // tank_move_sound.setBuffer(tank_move);
 }

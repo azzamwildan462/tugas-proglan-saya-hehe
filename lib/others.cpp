@@ -1,6 +1,10 @@
 #include "../include/others.h"
 #include "../include/mylib.h"
 
+// Bullet::~Bullet()
+// {
+// }
+
 void Bullet::init()
 {
     this->body.setPosition(sf::Vector2f(this->xpos, this->ypos));
@@ -270,3 +274,8 @@ Enemy::Enemy()
         ;
     tower_hitted_sound.setBuffer(tower_hitted);
 }
+
+// Enemy::~Enemy()
+// {
+//     delete[] this;
+// }

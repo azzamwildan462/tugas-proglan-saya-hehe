@@ -39,6 +39,8 @@ public:
     float getYpos();
     void setSpeed(float speed);
     void setColor(float r, float g, float b, float a);
+
+    // ~Bullet();
 };
 
 class Enemy
@@ -80,6 +82,7 @@ public:
 
     //==== Methods ====
     Enemy();
+    // ~Enemy();
     void setPosition(float xpos, float ypos);
     void init();
     void setWindow(sf::RenderWindow *window);
